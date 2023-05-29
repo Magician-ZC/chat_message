@@ -30,7 +30,7 @@ class MessageModel {
   final String content;
 
   ///消息创建时间
-  final int createAt;
+  final int createdAt;
 
   ///是否显示时间
   bool showCreatedTime = false;
@@ -41,14 +41,14 @@ class MessageModel {
       this.ownerName,
       this.avatar,
       required this.content,
-      required this.createAt})
+      required this.createdAt})
       : key = GlobalKey();
 
   factory MessageModel.fromJson(Map<String, dynamic> json) => MessageModel(
       ownerType: _of(json['ownerType']),
       content: json['content'],
       ownerName: json['ownerName'],
-      createAt: json['createAt'],
+      createdAt: json['createAt'],
       avatar: json['avatar'],
       id: json['id']);
 
@@ -57,7 +57,7 @@ class MessageModel {
         'ownerType': ownerType.toString(),
         'content': content,
         'ownerName': ownerName,
-        'createAt': createAt,
+        'createAt': createdAt,
         'avatar': avatar,
       };
 }

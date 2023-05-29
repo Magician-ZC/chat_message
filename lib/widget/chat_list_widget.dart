@@ -1,4 +1,5 @@
 import 'package:chat_message/models/message_model.dart';
+import 'package:chat_message/widget/default_message_widget.dart';
 import 'package:flutter/material.dart';
 
 import '../core/chat_controller.dart';
@@ -17,27 +18,31 @@ class ChatList extends StatefulWidget {
 
 class _ChatListState extends State<ChatList> {
   ChatController get chatController => widget.chatController;
-  ScrollController get scrollController => chatController.scrollController;
+  ScrollController get scrollScroller => chatController.scrollController;
 
-  Widget get _chatStreamBuilder => StreamBuilder<List<MessageModel>>(builder:
+  Widget get _chatStreamBuilder => StreamBuilder<List<MessageModel>>(
+      stream: chatController.messageStramController.stream,
+      builder:
           (BuildContext context, AsyncSnapshot<List<MessageModel>> snapshot) {
         return snapshot.connectionState == ConnectionState.active
             ? ListView.builder(
+                shrinkWrap: true,
                 reverse: true,
                 padding: widget.padding,
-                controller: scrollController,
+                controller: scrollScroller,
                 itemCount: snapshot.data?.length ?? 0,
                 itemBuilder: (BuildContext context, int index) {
                   var model = snapshot.data![index];
                   //todo
-                  return _buildMessageWidget(key: model.key, message: model);
+                  return DefaultMessageWidget(key: model.key, message: model);
                 })
             : const Center(child: CircularProgressIndicator());
       });
 
   @override
   Widget build(BuildContext context) {
-    return _chatStreamBuilder;
+    //配合shrinkWrap：true使用，解决数据少的时候数据底部对其的问题
+    return Align(alignment: Alignment.topCenter, child: _chatStreamBuilder);
   }
 
   @override

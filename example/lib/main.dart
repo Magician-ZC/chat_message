@@ -1,6 +1,6 @@
 import 'package:chat_message/core/chat_controller.dart';
 import 'package:chat_message/models/message_model.dart';
-import 'package:chat_message/widget/chat_list.dart';
+import 'package:chat_message/widget/chat_list_widget.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'ChatMessage Example'),
     );
   }
 }
@@ -33,21 +33,22 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  int count = 0;
   final List<MessageModel> _messageList = [
     MessageModel(
         ownerType: OwnerType.receiver,
         content: 'ChatGPT是否OpenAI研发的聊天机器人程序',
-        createAt: 1772058683000,
+        createdAt: 1772058683000,
         id: 2,
-        avatar: 'https://o.devio.org/images/o_as/avatar/tx2.jpeg',
+        avatar: 'https://o.devio.org/images/o_as/avatar/tx1.jpeg',
         ownerName: 'ChatGPT'),
     MessageModel(
         ownerType: OwnerType.receiver,
-        content: '介绍',
-        createAt: 1771058683000,
+        content: '介绍一下CHatGPT',
+        createdAt: 1771058683000,
         id: 1,
         avatar: 'https://o.devio.org/images/o_as/avatar/tx2.jpeg',
-        ownerName: 'ChatGPT'),
+        ownerName: 'Imooc'),
   ];
   late ChatController chatController;
 
@@ -70,8 +71,38 @@ class _MyHomePageState extends State<MyHomePage> {
               child: ChatList(
             chatController: chatController,
           )),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              ElevatedButton(onPressed: _send, child: const Text('Send'))
+            ],
+          ),
+          const SizedBox(
+            height: 20,
+          )
         ],
       ),
     );
+  }
+
+  void _send() {
+    chatController.addMessage(
+      MessageModel(
+          ownerType: OwnerType.sender,
+          content: 'Hello ${count++}',
+          createdAt: DateTime.now().millisecondsSinceEpoch,
+          avatar: 'https://o.devio.org/images/o_as/avatar/tx1.jpeg',
+          ownerName: 'Imooc'),
+    );
+    Future.delayed(const Duration(milliseconds: 2000), () {
+      chatController.addMessage(
+        MessageModel(
+            ownerType: OwnerType.receiver,
+            content: 'Hello',
+            createdAt: DateTime.now().millisecondsSinceEpoch,
+            avatar: 'https://o.devio.org/images/o_as/avatar/tx2.jpeg',
+            ownerName: 'ChatGPT'),
+      );
+    });
   }
 }
