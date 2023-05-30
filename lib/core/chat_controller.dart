@@ -1,12 +1,14 @@
 import 'dart:async';
 
 import 'package:chat_message/models/message_model.dart';
+import 'package:chat_message/widget/default_message_widget.dart';
 import 'package:flutter/cupertino.dart';
 
 class ChatController implements IChatController {
   ///初始化数据
   final List<MessageModel> initialMessageList;
   final ScrollController scrollController;
+  final MessageWidgetBuilder? messageWidgetBuilder;
 
   ///展示时间的间隔，单位秒
   final int timePellet;
@@ -15,7 +17,8 @@ class ChatController implements IChatController {
   ChatController(
       {required this.initialMessageList,
       required this.scrollController,
-      required this.timePellet}) {
+      required this.timePellet,
+      this.messageWidgetBuilder}) {
     for (var message in initialMessageList.reversed) {
       inflateMessage(message);
     }

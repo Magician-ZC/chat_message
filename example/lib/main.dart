@@ -57,6 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     chatController = ChatController(
         initialMessageList: _messageList,
+        //messageWidgetBuilder: _diyMessageWidget,
         scrollController: ScrollController(),
         timePellet: 60);
   }
@@ -72,6 +73,12 @@ class _MyHomePageState extends State<MyHomePage> {
           Expanded(
               child: ChatList(
             chatController: chatController,
+            onBubbleLongPress: (MessageModel message, BuildContext ancestor) {
+              debugPrint("onBubbleLongPress:${message.content}");
+            },
+            onBubbleTap: (MessageModel message, BuildContext ancestor) {
+              debugPrint("onBubbleTap:${message.content}");
+            },
           )),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -129,5 +136,17 @@ class _MyHomePageState extends State<MyHomePage> {
           ownerName: 'ChatGPT')
     ];
     chatController.loadMoreData(messageList);
+  }
+
+  Widget _diyMessageWidget(MessageModel message) {
+    return Container(
+      margin: EdgeInsets.only(top: 0, bottom: 10),
+      padding: EdgeInsets.only(top: 30, bottom: 30),
+      decoration: BoxDecoration(
+          color: message.ownerType == OwnerType.sender
+              ? Colors.amberAccent
+              : Colors.redAccent),
+      child: Text('${message.ownerName}: ${message.content}'),
+    );
   }
 }

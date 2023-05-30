@@ -3,6 +3,10 @@ import 'package:chat_message/models/message_model.dart';
 import 'package:chat_message/util/wechat_date_format.dart';
 import 'package:flutter/material.dart';
 
+typedef MessageWidgetBuilder = Widget Function(MessageModel message);
+typedef OnBubbleClick = void Function(
+    MessageModel message, BuildContext ancestor);
+
 class DefaultMessageWidget extends StatelessWidget {
   final MessageModel message;
   final String? fontFamily;
@@ -10,6 +14,10 @@ class DefaultMessageWidget extends StatelessWidget {
   final double avatarSize;
   final Color? textColor;
   final Color? backgroundColor;
+  final MessageWidgetBuilder? messageWidget;
+  final OnBubbleClick? onBubbleTap;
+  final OnBubbleClick? onBubbleLongPress;
+
   const DefaultMessageWidget(
       {required GlobalKey key,
       required this.message,
@@ -17,7 +25,10 @@ class DefaultMessageWidget extends StatelessWidget {
       this.fontSize = 16,
       this.avatarSize = 40,
       this.textColor,
-      this.backgroundColor})
+      this.backgroundColor,
+      this.messageWidget,
+      this.onBubbleTap,
+      this.onBubbleLongPress})
       : super(key: key);
 
   Widget get _buildCircleAvatar {
@@ -53,6 +64,9 @@ class DefaultMessageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (messageWidget != null) {
+      return messageWidget!(message);
+    }
     Widget content = message.ownerType == OwnerType.receiver
         ? _buildReceiver(context)
         : _buildSender(context);
@@ -108,14 +122,20 @@ class DefaultMessageWidget extends StatelessWidget {
   }
 
   _buildContentText(TextAlign align, BuildContext context) {
-    return Text(
-      message.content,
-      textAlign: align,
-      style: TextStyle(
-          fontSize: fontSize,
-          color: textColor ?? Colors.black,
-          fontFamily: fontFamily),
-    );
+    return InkWell(
+        onTap: () =>
+            onBubbleTap != null ? onBubbleTap!(message, context) : null,
+        onLongPress: () => onBubbleLongPress != null
+            ? onBubbleLongPress!(message, context)
+            : null,
+        child: Text(
+          message.content,
+          textAlign: align,
+          style: TextStyle(
+              fontSize: fontSize,
+              color: textColor ?? Colors.black,
+              fontFamily: fontFamily),
+        ));
   }
 
   _buildCreatedTime() {
