@@ -1,12 +1,10 @@
+import 'package:chat_message/util/wechat_date_format.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:chat_message/chat_message.dart';
-
 void main() {
-  test('adds one to input values', () {
-    final calculator = Calculator();
-    expect(calculator.addOne(2), 3);
-    expect(calculator.addOne(-7), -6);
-    expect(calculator.addOne(0), 1);
+  test('wechat date format', () {
+    debugPrint(WechatDateFormat.format(1972058683000).toString());
+    debugPrint(WechatDateFormat.format(1772058683000).toString());
   });
 }

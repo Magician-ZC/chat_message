@@ -56,7 +56,9 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     chatController = ChatController(
-        initialMessageList: _messageList, scrollController: ScrollController());
+        initialMessageList: _messageList,
+        scrollController: ScrollController(),
+        timePellet: 60);
   }
 
   @override
@@ -74,6 +76,8 @@ class _MyHomePageState extends State<MyHomePage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
+              ElevatedButton(
+                  onPressed: _loadMore, child: const Text('LoadMore')),
               ElevatedButton(onPressed: _send, child: const Text('Send'))
             ],
           ),
@@ -104,5 +108,26 @@ class _MyHomePageState extends State<MyHomePage> {
             ownerName: 'ChatGPT'),
       );
     });
+  }
+
+  int _counter = 0;
+  void _loadMore() {
+    var tl = 1772058683000;
+    tl = tl - ++_counter * 1000000;
+    final List<MessageModel> messageList = [
+      MessageModel(
+          ownerType: OwnerType.sender,
+          content: 'Hello ${_counter++}',
+          createdAt: DateTime.now().millisecondsSinceEpoch,
+          avatar: 'https://o.devio.org/images/o_as/avatar/tx1.jpeg',
+          ownerName: 'Imooc'),
+      MessageModel(
+          ownerType: OwnerType.receiver,
+          content: 'Hello',
+          createdAt: DateTime.now().millisecondsSinceEpoch,
+          avatar: 'https://o.devio.org/images/o_as/avatar/tx2.jpeg',
+          ownerName: 'ChatGPT')
+    ];
+    chatController.loadMoreData(messageList);
   }
 }
